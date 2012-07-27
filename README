@@ -1,0 +1,4 @@
+OakShops
+==========
+
+This is a Bukkit plugin that adds player-run shops to the game. This was heavily inspired by ShowCaseStandalone. I liked SCS, but I wanted some very specific features that it would never have. I also needed complete integration with some of my other plugins. This shop plugin uses my core library to store all shop data in a DB as well as log every single transaction. I like to keep a keen eye on all economy interfaces running on my server.

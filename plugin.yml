@@ -1,0 +1,4 @@
+name: OakShops
+main: com.ignoreourgirth.gary.oakshops.OakShops
+version: 1.0
+depend: [OakCoreLib]
