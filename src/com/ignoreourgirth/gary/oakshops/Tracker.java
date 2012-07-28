@@ -202,7 +202,7 @@ public class Tracker implements Listener {
 	}
 	
 	@EventHandler (priority=EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onPistonRetract(EntityChangeBlockEvent event) {
+	public void onPistonChangeBlock(EntityChangeBlockEvent event) {
 		if (locations.contains(event.getBlock().getLocation())) {
 			event.setCancelled(true);
 		}
