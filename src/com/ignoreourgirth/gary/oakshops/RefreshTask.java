@@ -28,6 +28,6 @@ public class RefreshTask implements Runnable  {
 
 	@Override
 	public void run() {
-		shop.refreshDisplay(relaxed);
+		shop.showDisplay(relaxed);
 	}
 }

@@ -24,20 +24,20 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
+import com.ignoreourgirth.gary.oakcorelib.DisplayItems;
 import com.ignoreourgirth.gary.oakcorelib.OakCoreLib;
 import com.ignoreourgirth.gary.oakcorelib.StringFormats;
 
 public class Shop {
 
-	private Item display;
+	private Integer displayID;
 	private Location center;
 	
 	protected Shop(int ID, String ownerName, Location location) {
+		displayID = null;
 		shopID = ID;
 		type = ShopType.Sell;
 		base = location.clone();
@@ -50,6 +50,7 @@ public class Shop {
 	}
 	
 	protected Shop(int ID, ShopType shopType, String ownerName, Location location, ItemStack baseItem, int itemCount, int itemsMax, double itemPrice, boolean flags_DevShop) {
+		displayID = null;
 		shopID = ID;
 		type = shopType;
 		base = location.clone();
@@ -93,7 +94,7 @@ public class Shop {
 		} else if (type  == ShopType.Buy) {
 			base.getBlock().setType(Material.GOLD_BLOCK);
 		}
-		refreshDisplay(true);
+		showDisplay(true);
 	}
 	
 	private ItemStack item;
@@ -111,7 +112,7 @@ public class Shop {
 		item = newItem;
 		setInventory(0);
 		DBCode.setItem(shopID, newItem);
-		refreshDisplay(false);
+		showDisplay(false);
 	}
 
 	private int inventory;
@@ -119,7 +120,7 @@ public class Shop {
 	public void setInventory(int newCount) { 
 		inventory = newCount;
 		DBCode.setField(shopID, "inventory", inventory);
-		refreshDisplay(true);
+		showDisplay(true);
 	}
 	
 	private int maxInventory;
@@ -127,7 +128,7 @@ public class Shop {
 	public void setMaxInventory(int newCount) {
 		maxInventory = newCount;
 		DBCode.setField(shopID, "maxInventory", newCount);
-		if (type == ShopType.Buy) refreshDisplay(true);
+		if (type == ShopType.Buy) showDisplay(true);
 	}
 	
 	private double price;
@@ -144,25 +145,23 @@ public class Shop {
 		DBCode.setField(shopID, "flag_DevShop", flag_DevShop);
 	}
 	
-	public void refreshDisplay(boolean relaxed) {
+	public void showDisplay(boolean relaxed) {
 		if ((inventory == 0 && type == ShopType.Sell) ||
 				inventory >= maxInventory && type == ShopType.Buy) {
-			clearDisplay();
+			hideDisplay();
 			return;
-		} else if (!relaxed || display == null) {
+		} else if (!relaxed || displayID == null) {
 			if (center.getChunk().isLoaded()) {
-				clearDisplay();
-				display = center.getWorld().dropItem(center, item.clone());
-				display.setVelocity(new Vector(0,0.01,0));
-				display.setPickupDelay(Integer.MAX_VALUE);
+				hideDisplay();
+				displayID = DisplayItems.newItem(item, center, OakShops.plugin);
 			}
 		}
 	}
 	
-	public void clearDisplay() {
-		if (display != null) {
-			display.remove();
-			display = null;
+	public void hideDisplay() {
+		if (displayID != null) {
+			DisplayItems.removeItem(displayID);
+			displayID = null;
 		}
 	}
 	

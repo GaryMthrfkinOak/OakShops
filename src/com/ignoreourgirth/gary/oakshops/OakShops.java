@@ -33,7 +33,7 @@ public class OakShops extends JavaPlugin {
 		plugin = this;
 		log = this.getLogger();
 		tracker = new Tracker();
-        getServer().getPluginManager().registerEvents(tracker, this);
+		getServer().getPluginManager().registerEvents(tracker, this);
         CommandPreprocessor.addPermission("shop.admin", "oakshops.admin");
         CommandPreprocessor.addExecutor(new Commands());
 	}
