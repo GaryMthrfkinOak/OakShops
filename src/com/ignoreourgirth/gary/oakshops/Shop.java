@@ -167,8 +167,9 @@ public class Shop {
 	
 	public void leftClick(Player player) {
 		if (item == null) return;
+
 		ChatColor outline = ChatColor.GRAY;
-		String readableMaterial = item.getType().toString().replace('_', ' ');
+		String readableMaterial = Utils.formatItemName(item);
 		String inventoryText = "" + ChatColor.WHITE + ChatColor.BOLD + "Stock: " 
 				+ ChatColor.RESET + ChatColor.DARK_AQUA + String.valueOf(inventory);
 		String magicText = "";

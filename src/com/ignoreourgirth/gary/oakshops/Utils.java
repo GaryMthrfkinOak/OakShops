@@ -24,10 +24,12 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -37,6 +39,7 @@ public class Utils {
 	private static final String noShopThereText = ChatColor.RED + "There is no shop here.";
 	private static final String notOwnerText = ChatColor.RED + "Access Denied. You are not the owner of this shop.";
 	protected static HashMap<Enchantment, String> friendlyEnchantmentNames;
+	protected static HashMap<Integer, String> friendlyDyeNames;
 	protected static HashSet<Material> disallowedBlockTypes;
 	protected static HashSet<Material> damageableItems;
 	
@@ -165,6 +168,22 @@ public class Utils {
 		damageableItems.add(Material.DIAMOND_CHESTPLATE);
 		damageableItems.add(Material.DIAMOND_HELMET);
 		damageableItems.add(Material.DIAMOND_LEGGINGS);
+		friendlyDyeNames = new HashMap<Integer, String>();
+		friendlyDyeNames.put(0, "Ink Sack");
+		friendlyDyeNames.put(2, "Cactus Green Dye");
+		friendlyDyeNames.put(3, "Coca Bean");
+		friendlyDyeNames.put(4, "Lapis Lazuli");
+		friendlyDyeNames.put(5, "Purple Dye");
+		friendlyDyeNames.put(6, "Cyan Dye");
+		friendlyDyeNames.put(7, "Light Gray Dye");
+		friendlyDyeNames.put(8, "Gray Dye");
+		friendlyDyeNames.put(9, "Pink Dye");
+		friendlyDyeNames.put(10, "Lime Dye");
+		friendlyDyeNames.put(11, "Dandelion Yellow Dye");
+		friendlyDyeNames.put(12, "Light Blue Dye");
+		friendlyDyeNames.put(13, "Magenta Dye");
+		friendlyDyeNames.put(14, "Orange Dye");
+		friendlyDyeNames.put(15, "Bone Meal"); 
 	}
 	
 	public static Shop validate(Player player, Location location) {
@@ -265,6 +284,29 @@ public class Utils {
 			if (player.getName().equalsIgnoreCase(name)) return player.getName();
 		}
 		return null;
+	}
+	
+	public static String formatItemName(ItemStack stack) {
+		String initalName = stack.getType().toString();
+		
+		if (stack.getType() == Material.MONSTER_EGG) {
+			EntityType entityType = EntityType.fromId(stack.getData().getData());
+			initalName = entityType.getName() + "_Egg";
+		} else if (stack.getType() == Material.WOOL) { 
+			DyeColor color = DyeColor.getByData(stack.getData().getData());
+			initalName = color.toString() + "_Wool";
+		} else if (stack.getType() == Material.INK_SACK) { 
+			return friendlyDyeNames.get(((int)stack.getData().getData()));
+		}
+		
+		StringBuilder result = new StringBuilder(initalName.length());
+		String[] words = initalName.split("\\_");
+		for(int i=0; i < words.length; i++) {
+		  if(i>0) result.append(" ");      
+		  result.append(Character.toUpperCase(words[i].charAt(0)));
+		  result.append(words[i].substring(1).toLowerCase());
+		}
+		return result.toString();
 	}
 	
 }
